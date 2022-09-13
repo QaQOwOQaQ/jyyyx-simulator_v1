@@ -72,7 +72,7 @@ inst_t program[15] = {
         "retq"
     },
     // main entry point
-    { // 12
+    { // 12，第十二条指令，在数组中的下标为11
         mov_reg_reg,
         { REG,  0,  0,  &reg.rdx,  NULL },
         { REG,  0,  0,  &reg.rsi,  NULL },

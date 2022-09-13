@@ -1,3 +1,6 @@
+#ifndef inst_guard
+#define inst_guard
+
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -60,4 +63,6 @@ void init_handler_table();
 void instruction_cycle();
 void add_reg_reg_handler(uint64_t src, uint64_t dst);
 void mov_reg_reg_handler(uint64_t src, uint64_t dst);
+
+#endif
 

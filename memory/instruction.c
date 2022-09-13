@@ -1,7 +1,9 @@
 #include <stdint.h>
+#include <stdio.h>
 #include "instruction.h"
 #include "../cpu/mmu.h"
 #include "../cpu/register.h"
+#include "../disk/elf.h"
 
 // 实现instrction.h中的decode
 uint64_t decode_od(od_t od)
@@ -59,17 +61,21 @@ uint64_t decode_od(od_t od)
 void instruction_cycle()
 {
     inst_t *instr = (inst_t *)reg.rip; // rip处存放着指令的地址
-    // inst_t inster = programp[reg.rip]
+
     uint64_t src = decode_od(instr->src);
     uint64_t dst = decode_od(instr->dst);
 
-    handler_t handler = handler_table[instr->op];
+    printf("op = 0x%lx\n", (uint64_t)instr->op);
+    handler_t handler = handler_table[instr->op];     // sg！！！
     handler(src, dst);
+    printf("!!src = 0x%lx \ndst = 0x%lx!!\n", src, dst);
+    printf("0x%16lx -- 0x%16lx\n", *(uint64_t *)src, *(uint64_t *)dst);
+    printf("    %s\n", instr->code);
 }
 
 void init_handler_table()
 { // 初始化函数指针数组
-    handler_table[mov_mem_reg] = &mov_reg_reg_handler;
+    handler_table[mov_reg_reg] = &mov_reg_reg_handler;
     handler_table[add_reg_reg] = &add_reg_reg_handler;
 }
 
