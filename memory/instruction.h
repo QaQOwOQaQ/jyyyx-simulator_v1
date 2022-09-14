@@ -23,7 +23,7 @@ typedef enum OD_TYPE
     MM_IMM, MM_REG, MM_IMM_REG, 
     MM_REG1_REG2, MM_IMM_REG1_REG2, 
     MM_REG2_S, MM_IMM_REG2_S, MM_REG1_REG2_S, 
-    MM_IMM_REG1_REG2_S, 
+    MM_IMM_REG1_REG2_S
 }od_type_t;
 
 typedef struct OD
@@ -63,6 +63,9 @@ void init_handler_table();
 void instruction_cycle();
 void add_reg_reg_handler(uint64_t src, uint64_t dst);
 void mov_reg_reg_handler(uint64_t src, uint64_t dst);
+void call_handler(uint64_t src, uint64_t dst);
+
+
 
 #endif
 

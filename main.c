@@ -44,7 +44,7 @@ int main()
     */
 
     // run init
-    for(int i = 0; i < 1; i ++ )
+    for(int i = 0; i < 3; i ++ )
     {
         instruction_cycle();
         print_register();

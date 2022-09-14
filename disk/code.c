@@ -82,18 +82,18 @@ inst_t program[15] = {
         mov_reg_reg,
         { REG,  0,  0,  (uint64_t *)&reg.rax,  NULL},
         { REG,  0,  0,  (uint64_t *)&reg.rdi,  NULL},
-        "mov \%rdx \%rdi"
+        "mov \%rax \%rdi"
     },
     { // 14
         call,
         { IMM,      (uint64_t)&(program[0]),  0,  NULL,  NULL },
-        { EMPTY,    0,                          0,  NULL,  NULL },
+        { EMPTY,    0,                        0,  NULL,  NULL },
         "callq <add>"
     },
     { // 15
         mov_reg_mem,
         { REG,          0,    0,  (uint64_t *)&reg.rax,  NULL },
         { MM_IMM_REG,  -0x8,  0,  (uint64_t *)&reg.rbp,  NULL },
-        "mov \%rax, -0x8(%rbp)"
+        "mov \%rax, -0x8(\%rbp)"
     }
 };

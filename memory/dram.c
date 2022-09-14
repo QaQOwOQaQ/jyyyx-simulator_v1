@@ -7,9 +7,11 @@
 // 1  --> on
 #define SRAM_CACHE_SETTING 0
 
-// 通过读函数和写函数巧妙的将一个64位数写入一个8位数中
+// 为内存设计的一套接口--读写函数
+// 往内存里写东西 or 读东西，通过一种间接的方式-函数
+// 另外通过读函数和写函数巧妙的将一个64位数写入8个内存单元中（一个内存单元是一个字节）
 // 方法是将64位数拆分为8个8位数然后存储在8个内存单元
-// 巧妙！！！
+// 直接访问内存很危险！人总会犯错，并且访问内存很慢的，相较于cached的话！访存是访cache的大约100倍！
 uint64_t read64bits_dram(uint64_t paddr)
 {
     if(SRAM_CACHE_SETTING == 1)
@@ -47,6 +49,8 @@ void write64bits_dram(uint64_t paddr, uint64_t data)
     mm[paddr + 7] = (data >> 56) & 0xff;
 }
 
+
+// 两个print--debug函数
 void print_register() // 打印所有的register--方便查看
 {
     printf("rax = 0x%-16lx\nrbx = 0x%-16lx\nrcx = 0x%-16lx\nrdx = 0x%-16lx\n", reg.rax, reg.rbx, reg.rcx, reg.rdx);

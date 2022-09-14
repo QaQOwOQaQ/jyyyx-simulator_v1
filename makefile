@@ -1,5 +1,5 @@
 # makefile 可以粗浅的理解为封装了gcc命令的"bash"脚本
-CFLAGS = -Wall -g -O2 -Werror -std=gnu99
+CFLAGS = -Wall -g -O2 -std=gnu99
 EXE = program
 CODE = cpu/mmu.c memory/dram.c disk/code.c  memory/instruction.c  main.c
 
