@@ -35,6 +35,10 @@ uint64_t decode_od(od_t od)
         {
             vaddr = *(od.reg1);
         }
+        else if(od.type == MM_IMM_REG)
+        {
+            vaddr = od.imm + *(od.reg1);
+        }
         else if(od.type == MM_REG1_REG2)
         {
             vaddr = *(od.reg1) + *(od.reg2);
@@ -60,36 +64,50 @@ uint64_t decode_od(od_t od)
             vaddr = od.imm + *(od.reg1) + (*(od.reg2)) * od.scal;
         }
 
-        return va2pa(vaddr);
+        return va2pa(vaddr); // 在decode中把va转换为pa不是很合适，应该放在命令中做。你知道我想要pa还是va？
+        return vaddr;
     }
 }
 
 // 实现instrction.h中的 instruction_cycle
 void instruction_cycle()
 {
-    // debug counter T.T hope no bug here！！！
+    {   // debug block
+    // T.T hope no bug here！！！
+    // out message: Error!!!!!!!!!!!!!!!!!!!!!!
+    // if(count == 6) // zhong duan - -
+    // {
+    //     puts("Error!!!!!!!!!!!!!!!!!!!!!!");
+    //     printf("\n****  %drd instrctions:%s  ****\n\n", count, instr->code);
+    //     return ;
+    // }
+    }
     ++ count;
 
     // 取指
     inst_t *instr = (inst_t *)reg.rip; // rip处存放着指令的地址
-
+  
     // 译码
-    uint64_t src = decode_od(instr->src);
+    uint64_t src = decode_od(instr->src);        
     uint64_t dst = decode_od(instr->dst);
     
     // 取函数执行
     handler_t handler = handler_table[instr->op]; 
     handler(src, dst);  
-
+  
     // 打印指令
-    printf("    %s\n", instr->code);
+    printf("\n****  %drd instrctions:   %s  ****\n\n", count, instr->code);
 }
 
 void init_handler_table()
-{ // 初始化函数指针数组
-    handler_table[mov_reg_reg] = &mov_reg_reg_handler;
+{ // 初始化函数指针数组    
     handler_table[add_reg_reg] = &add_reg_reg_handler;
-    handler_table[call] = &call_handler;
+    handler_table[call]        = &call_handler;
+    handler_table[push_reg]    = &push_reg_handler;
+    handler_table[pop_reg]     = &pop_reg_handler;
+    handler_table[mov_reg_mem] = &mov_reg_mem_handler;
+    handler_table[mov_mem_reg] = &mov_mem_reg_handler;
+    handler_table[mov_reg_reg] = &mov_reg_reg_handler;
 }
 
 void mov_reg_reg_handler(uint64_t src, uint64_t dst)
@@ -115,4 +133,39 @@ void call_handler(uint64_t src, uint64_t dst)
     write64bits_dram(va2pa(reg.rsp), reg.rip + sizeof(inst_t));
 
     reg.rip = src;
+}
+
+void push_reg_handler(uint64_t src, uint64_t dst)
+{
+    // src: reg
+    // dst: empty
+
+    // push:先申请栈空间再放数据
+    reg.rsp = reg.rsp - 8;
+    write64bits_dram(va2pa(reg.rsp), *(uint64_t *)src);
+    reg.rip = reg.rip + sizeof(inst_t);
+}
+
+void pop_reg_handler(uint64_t src, uint64_t dst)
+{
+    // src: reg
+    // dst: empty
+
+    // pop：先取出数据然后释放栈空间
+    reg.rsp = reg.rsp + 8;
+    reg.rip = reg.rip + sizeof(inst_t);
+}
+
+void mov_reg_mem_handler(uint64_t src, uint64_t dst)
+{
+    // src: reg
+    // dst: memory
+    write64bits_dram(va2pa(dst), *(uint64_t *)src);
+    reg.rip = reg.rip + sizeof(inst_t); 
+}
+
+void mov_mem_reg_handler(uint64_t src, uint64_t dst)
+{
+    *(uint64_t *)dst = read64bits_dram(va2pa(src));
+    reg.rip = reg.rip + sizeof(inst_t);
 }

@@ -45,19 +45,19 @@ inst_t program[15] = {
         add_reg_reg,
         {REG,  0,  0,  (uint64_t *)&reg.rdx,  NULL},
         {REG,  0,  0,  (uint64_t *)&reg.rax,  NULL},
-        "mov \%rdx, \%rax"
+        "add \%rdx, \%rax"
     },
     { // 8
         mov_reg_mem,
         { REG,        0,    0,  (uint64_t *)&reg.rax,  NULL },
         { MM_IMM_REG, -0x8, 0,  (uint64_t *)&reg.rbp,  NULL },
-        "mov \%rax, -0x0(\%rbp)"
+        "mov \%rax, -0x8(\%rbp)" // bug here
     },
     { // 9
         mov_mem_reg,
         { MM_IMM_REG, -0x8,  0,   (uint64_t *)&reg.rbp,   NULL },
         { REG,        0,     0,   (uint64_t *)&reg.rax,   NULL },
-        "mov -0x8(\%rbp, \%rax)"
+        "mov -0x8(\%rbp), \%rax"
     },
     { // 10
         pop_reg,
