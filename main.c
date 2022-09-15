@@ -26,7 +26,7 @@ int main()
     // 绝对不要直接对内存进行读写,这是非常危险的行为，例如：m[va2pa(0x7fffffffe3d0)] = 0x00000000; !!! 危险
     // 通过函数读写
     write64bits_dram(va2pa(0x7fffffffe3b0), 0x0);
-    write64bits_dram(va2pa(0x7fffffffe3b8), 0x1234);
+    write64bits_dram(va2pa(0x7fffffffe3b8), 0x12340000);
     write64bits_dram(va2pa(0x7fffffffe3c0), 0xabcd);
     write64bits_dram(va2pa(0x7fffffffe3c8), 0x0);
     write64bits_dram(va2pa(0x7fffffffe3d0), 0x0);
@@ -44,7 +44,7 @@ int main()
     */
 
     // run init
-    for(int i = 0; i < 12; i ++ )
+    for(int i = 0; i < 15; i ++ )
     {
         instruction_cycle();
         print_register();
@@ -67,7 +67,7 @@ int main()
 
     match = 1;
     match = match && (read64bits_dram(va2pa(0x7fffffffe3b0)) == 0x0);
-    match = match && (read64bits_dram(va2pa(0x7fffffffe3b8)) == 0x1234abcd);
+    match = match && (read64bits_dram(va2pa(0x7fffffffe3b8)) == 0x12340000);
     match = match && (read64bits_dram(va2pa(0x7fffffffe3c0)) == 0xabcd);
     match = match && (read64bits_dram(va2pa(0x7fffffffe3c8)) == 0x1234abcd);
     match = match && (read64bits_dram(va2pa(0x7fffffffe3d0)) == 0x0);
